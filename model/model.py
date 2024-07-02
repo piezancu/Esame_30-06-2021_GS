@@ -11,20 +11,21 @@ class Model:
 
     def creaGrafo(self):
         nodes = DAO.DAO.getChromosomes()
-
         self.graph.add_nodes_from(nodes)
 
-        tuplelist = list(itertools.combinations(nodes, 2))
+        weighted_edges = DAO.DAO.getWeightedEdges()
+        self.graph.add_weighted_edges_from(weighted_edges)
 
-        for t in tuplelist:
-            weightTo = DAO.DAO.getEdgeTo(t[0],  t[1])
-            weightFrom = DAO.DAO.getEdgeTo(t[1],  t[0])
-
-            if weightTo[0]:
-                self.graph.add_edge(t[0], t[1], weight=weightTo[1])
-
-            if weightFrom[0]:
-                self.graph.add_edge(t[1], t[0], weight=weightFrom[1])
+        # tuplelist = list(itertools.combinations(nodes, 2))
+        #
+        # for t in tuplelist:
+        #     weightTo = DAO.DAO.getEdgeTo(t[0], t[1])
+        #     weightFrom = DAO.DAO.getEdgeTo(t[1], t[0])
+        #
+        #     if weightTo != []:
+        #         self.graph.add_edge(t[0], t[1], weight=weightTo[0])
+        #     if weightFrom != []:
+        #         self.graph.add_edge(t[1], t[0], weight=weightFrom[0])
 
         sorted_edges = sorted(self.graph.edges(data=True), key=lambda x: x[2]['weight'], reverse=True)
         max = sorted_edges[0][2]['weight']
