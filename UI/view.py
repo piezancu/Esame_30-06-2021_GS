@@ -14,59 +14,44 @@ class View(ft.UserControl):
 
         # graphical elements
         self._title = None
-        self.txt_name = None
 
-        self.btn_graph = None
-        self.btn_countedges = None
-        self.btn_search = None
+        self.ddLocalization = None
+        self.btn_statistiche = None
+
+        self.btn_ricerca_cammino = None
 
         self.txt_result = None
-        self.txt_result2 = None
-        self.txt_result3 = None
 
-        self.txt_container = None
+
 
     def load_interface(self):
         # title
-        self._title = ft.Text("Lab14-Simulazione esame gene_small", color="blue", size=24)
+        self._title = ft.Text("Esame 30/06/2021 - Genes", color="blue", size=24)
         self._page.controls.append(self._title)
 
-        self.btn_graph = ft.ElevatedButton(text="Crea Grafo", on_click=self._controller.handle_graph)
-        row1 = ft.Row([self.btn_graph],
-                      alignment=ft.MainAxisAlignment.CENTER)
+        #row1
+        self.btn_crea_grafo = ft.ElevatedButton(text="Crea Grafo", on_click=self._controller.creaGrafo)
+        self.ddLocalization = ft.Dropdown(label="Localizzazione",
+                                         width=400)
+        self.btn_statistiche = ft.ElevatedButton(text="Statistiche", on_click=self._controller.handleStatistiche)
+        row1 = ft.Row([
+                        self.btn_crea_grafo,
+                        self.ddLocalization,
+                        self.btn_statistiche],
+                        alignment=ft.MainAxisAlignment.CENTER)
         self._page.controls.append(row1)
+
+        #ROW 2
+        self.btn_ricerca_cammino = ft.ElevatedButton(text="Ricerca Cammino", width=500, on_click=self._controller.handleRicerca)
+        row2 = ft.Row([self.btn_ricerca_cammino],
+                      alignment=ft.MainAxisAlignment.CENTER)
+        self._page.controls.append(row2)
 
         # List View where the reply is printed
         self.txt_result = ft.ListView(expand=1, spacing=10, padding=20, auto_scroll=True)
         self._page.controls.append(self.txt_result)
         self._page.update()
 
-        #ROW with some controls
-        # text field for the name
-        self.txt_name = ft.TextField(
-            label="soglia",
-            width=200,
-            hint_text="Soglia (s)"
-        )
-        self.btn_countedges = ft.ElevatedButton(text="Conta Archi", on_click=self._controller.handle_countedges)
-        row2 = ft.Row([self.txt_name, self.btn_countedges],
-                      alignment=ft.MainAxisAlignment.CENTER)
-        self._page.controls.append(row2)
-
-        # List View where the reply is printed
-        self.txt_result2 = ft.ListView(expand=1, spacing=10, padding=20, auto_scroll=True)
-        self._page.controls.append(self.txt_result2)
-        self._page.update()
-
-        self.btn_search = ft.ElevatedButton(text="Cerca cammino", on_click=self._controller.handle_search)
-        row3 = ft.Row([self.btn_search],
-                      alignment=ft.MainAxisAlignment.CENTER)
-        self._page.controls.append(row3)
-
-        # List View where the reply is printed
-        self.txt_result3 = ft.ListView(expand=1, spacing=10, padding=20, auto_scroll=True)
-        self._page.controls.append(self.txt_result3)
-        self._page.update()
     @property
     def controller(self):
         return self._controller
