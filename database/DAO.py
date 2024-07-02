@@ -26,7 +26,7 @@ class DAO():
     def getEdgeTo(node1, node2):
         conn = DBConnect.get_connection()
 
-        result = [False, 0]
+        result = [0]
 
         cursor = conn.cursor()
         query = """select distinct g1.Chromosome, g2.Chromosome, i.GeneID1, i.GeneID2 , i.Expression_Corr as ec
@@ -37,8 +37,37 @@ class DAO():
         cursor.execute(query, (node1, node2))
 
         for row in cursor:
-            result[0] = True
-            result[1] += row[4]
+            result[0] += row[4]
+
+        cursor.close()
+        conn.close()
+
+        return result
+
+    # OPPURE CREO DIRETTAMENTE LISTA DI TUPLE ARCO CON PESO
+    @staticmethod
+    def getWeightedEdges():
+        conn = DBConnect.get_connection()
+
+        result = []
+
+        cursor = conn.cursor()
+        query = """select c1,c2, sum(p) as peso
+                    from(
+                        select g.chromosome as c1, g2.Chromosome as c2, i.GeneID1, i.GeneID2, i.Expression_Corr as p
+                        from genes g , genes g2 , interactions i 
+                        where g.chromosome != g2.Chromosome 
+                            and g.geneid=i.GeneID1 
+                            and g2.geneid=i.GeneID2  
+                            and g.chromosome!=0 
+                            and g2.chromosome!=0
+                        group by g.chromosome, g2.Chromosome, i.GeneID1, i.GeneID2) as gruppi
+                    group by c1,c2"""
+
+        cursor.execute(query, )
+
+        for row in cursor:
+            result.append((row[0],row[1],row[2]))
 
         cursor.close()
         conn.close()
